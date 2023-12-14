@@ -7,10 +7,43 @@ from system_prompt import system_prompt
 from llama_hub.tools.requests import RequestsToolSpec
 from llama_index.agent import OpenAIAgent
 from llama_index.chat_engine.types import StreamingAgentChatResponse
+from llama_index import SimpleDirectoryReader
+from llama_index import Document
+from llama_index import VectorStoreIndex
+from llama_index import ServiceContext
 
+# Load the OpenAI key from the environment variable
 openai_key = os.getenv("OPENAI_KEY")
 if not openai_key:
     st.error("No OpenAI key found. Please set the OPENAI_KEY environment variable.")
+
+openai.api_key = openai_key
+
+
+# This function will load the vector store index
+@st.cache_data
+def load_vector_store_index():
+    documents = SimpleDirectoryReader(
+        input_files=["./eBook-How-to-Build-a-Career-in-AI.pdf"]
+    ).load_data()
+
+    document = Document(text="\n\n".join([doc.text for doc in documents]))
+
+    llm = OpenAI(model="gpt-4", temperature=0.1, system_prompt=system_prompt)
+    service_context = ServiceContext.from_defaults(
+        llm=llm, embed_model="local:BAAI/bge-small-en-v1.5"
+    )
+    
+    index = VectorStoreIndex.from_documents([document], service_context=service_context)
+    return index
+
+index=load_vector_store_index()
+query_engine = index.as_query_engine()
+print(query_engine)
+
+response = query_engine.query(
+    "What are steps to take when finding projects to build your experience?"
+)
 
 domain_headers = {
     "api.openai.com": {
@@ -30,39 +63,23 @@ st.set_page_config(
     menu_items=None,
 )
 
-openai.api_key = openai_key
-st.title("Alpha AI")
+
+st.title("Alpha AI 0")
 
 if "messages" not in st.session_state.keys():  # Initialize the chat messages history
     st.session_state.messages = [
         {
             "role": "assistant",
-            "content": "Hello there.",
-        },
-        {
-            "role": "assistant",
-            "content": "How are you?",
+            "content": "Hello there. How can I help you today?",
         },
     ]
 
 
-# @ st.cache_resource(show_spinner=False)
-# def load_data():
-#     with st.spinner(text=""):
-#         reader = SimpleDirectoryReader(input_dir="./data", recursive=True)
-#         docs = reader.load_data()
-#         service_context = ServiceContext.from_defaults(llm=OpenAI(
-#             model="gpt-4", temperature=0.5, system_prompt=system_prompt))
-#         index = VectorStoreIndex.from_documents(
-#             docs, service_context=service_context)
-#         return index
-
-# index = load_data()
-# chat_engine = index.as_chat_engine( chat_mode="condense_question", verbose=True, system_prompt=system_prompt)
 
 tool_spec = RequestsToolSpec(domain_headers=domain_headers)
+
 agent = OpenAIAgent.from_tools(
-    llm=OpenAI(model="gpt-4", temperature=0, system_prompt=system_prompt),
+    llm=llm,
     tools=tool_spec.to_tool_list(),
     system_prompt=system_prompt,
 )
