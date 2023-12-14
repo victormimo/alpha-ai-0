@@ -1,8 +1,8 @@
 version: "3.7"
 
 services:
-  alpha-ai:
-    image: alpha-ai:local # build a local image, if not already built
+  alpha-ai-0:
+    build: .
     volumes:
       - .:/app # Mounts the current directory into the /app directory in the container
     ports:
