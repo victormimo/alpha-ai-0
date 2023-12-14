@@ -20,4 +20,4 @@ EXPOSE $PORT
 HEALTHCHECK CMD curl --fail http://localhost:$PORT/_stcore/health
 
 # Use the shell form of ENTRYPOINT to use the environment variable
-ENTRYPOINT streamlit run chatbot.py --server.port=$PORT --server.address=0.0.0.0 --browser.gatherUsageStats=False
+ENTRYPOINT streamlit run streamlit_app.py --server.port=$PORT --server.address=0.0.0.0 --browser.gatherUsageStats=False
