@@ -17,9 +17,6 @@ domain_headers = {
         "Authorization": f"Bearer {openai_key}",
         "Content-Type": "application/json",
     },
-    "poet-tap-server-staging.azurewebsites.net": {
-        "Content-Type": "application/json",
-    },
     "127.0.0.1": {
         "Content-Type": "application/json",
     },
@@ -35,7 +32,7 @@ st.set_page_config(
 
 openai.api_key = openai_key
 st.title("Alpha AI")
-# st.info( "Check out the full tutorial on how to create cap tables on chain in our [blog post]()")
+
 if "messages" not in st.session_state.keys():  # Initialize the chat messages history
     st.session_state.messages = [
         {
