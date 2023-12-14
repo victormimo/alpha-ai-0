@@ -1,4 +1,4 @@
-# alpha-ai-0
+# alpha-ai-0: back to basics
 
 This repo can be run locally inside a [Docker](https://www.docker.com/products/docker-desktop/) container. For now, it's a simple chat interface that uses [Streamlit](https://streamlit.io)
 
