@@ -17,8 +17,17 @@ st.set_page_config(
 
 st.title("Alpha AI 0")
 
+print("Loading vector store index...")
 # Load the query engine from the vector store index
 query_engine = get_vector_store_index()
+print("Loaded vector store index. ✅")
+
+
+
+res = query_engine.query("What's the best way to get started in AI?")
+print("after query engine")
+print(str(res))
+
 
 # Initialize the chat engine and messages history if not already present
 if "messages" not in st.session_state:
@@ -26,19 +35,31 @@ if "messages" not in st.session_state:
         {"role": "assistant", "content": "Hello there. How can I help you today?"},
     ]
 
+tool_spec = RequestsToolSpec(domain_headers=domain_headers)
+
 # Initialize the OpenAI agent
 llm = OpenAI(model="gpt-4", temperature=0.1, system_prompt=system_prompt)
-tool_spec = RequestsToolSpec(domain_headers=domain_headers)
+
+print("printing llm")
+print(llm)
+
 if "chat_engine" not in st.session_state:
     st.session_state.chat_engine = get_agent(llm, tool_spec)
 
+# Initialize the chat messages history if not already present
+if "messages" not in st.session_state:
+    st.session_state.messages = [
+        {"role": "assistant", "content": "Hello there. How can I help you today?"},
+    ]
+
 # Chat input
-prompt = st.text_input("Ask me anything!")
-if prompt:
+if prompt := st.chat_input(" "):
     st.session_state.messages.append({"role": "user", "content": prompt})
+    print("user prompt")
+    print(prompt)
     # Process the user prompt with the query engine
     vector_response = query_engine.query(prompt)
-    st.session_state.messages.append({"role": "assistant", "content": vector_response['text']})
+    st.session_state.messages.append({"role": "assistant", "content": str(vector_response)})
     
     # Handle the chat response
     chat_responses = handle_chat_input(st.session_state.chat_engine, prompt, st.session_state.messages)
@@ -47,10 +68,5 @@ if prompt:
 
 # Display the conversation history
 for message in st.session_state.messages:
-    if message["role"] == "user":
-        st.text_area("You", value=message["content"], height=50, disabled=True)
-    else:  # message["role"] == "assistant"
-        st.text_area("Alpha AI", value=message["content"], height=50, disabled=True)
-
-# Clear the prompt after processing the input
-st.session_state.input = ""
+    with st.chat_message(message["role"]):
+        st.write(message["content"])

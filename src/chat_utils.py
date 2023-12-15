@@ -2,6 +2,7 @@ from llama_index.llms.base import ChatMessage
 from llama_index.agent import OpenAIAgent
 from llama_index.chat_engine.types import StreamingAgentChatResponse
 import streamlit as st
+from system_prompt import system_prompt
 
 def get_agent(llm, tool_spec):
     return OpenAIAgent.from_tools(
