@@ -1,7 +1,7 @@
 
 from llama_index.node_parser import HierarchicalNodeParser
 from llama_index.node_parser import get_leaf_nodes
-from llama_index import StorageContext
+from llama_index import StorageContext, load_index_from_storage
 from llama_index.retrievers import AutoMergingRetriever
 from llama_index.indices.postprocessor import SentenceTransformerRerank
 from llama_index.query_engine import RetrieverQueryEngine
