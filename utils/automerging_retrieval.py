@@ -5,6 +5,9 @@ from llama_index import StorageContext
 from llama_index.retrievers import AutoMergingRetriever
 from llama_index.indices.postprocessor import SentenceTransformerRerank
 from llama_index.query_engine import RetrieverQueryEngine
+from llama_index import ServiceContext
+from llama_index import VectorStoreIndex
+import os
 
 def build_automerging_index(
     documents,

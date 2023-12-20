@@ -13,14 +13,13 @@ from llama_index.chat_engine.types import StreamingAgentChatResponse
 from llama_index import SimpleDirectoryReader
 from llama_index import Document
 from llama_index import VectorStoreIndex
-from llama_index import ServiceContext
 
 sys.path.append("utils")
 
 # importing utils
 from sentence_window_retrieval import build_sentence_window_index, get_sentence_window_query_engine
 from automerging_retrieval import build_automerging_index, get_automerging_query_engine
-from trulens_recorder import load_trulens
+from trulens_recorder import load_trulens, get_tru
 
 load_dotenv()
 
@@ -85,9 +84,11 @@ def load_automerging_retrieval():
 
 
 # Pick which retrieval method to use
-query_engine, app_id = load_sentence_retrieval() # load_automerging_retrieval()
+query_engine, app_id = load_automerging_retrieval() #load_sentence_retrieval() 
 
+# Load the trulens recorder and object for dashboard
 tru_recorder = load_trulens(query_engine, app_id)
+tru = get_tru()
 
 domain_headers = {
     "api.openai.com": {

@@ -11,9 +11,12 @@ import numpy as np
 truelens_openai = TruLensOpenAI()
 tru = Tru()
 
+def get_tru():
+    return tru
+
 # underscores in func params are to avoid hashing argument
 @st.cache_resource
-def load_trulens(_query_engine, _app_id):
+def load_trulens(_query_engine, app_id):
     print("loading trulens")
     
     tru.reset_database()
@@ -43,7 +46,7 @@ def load_trulens(_query_engine, _app_id):
     feedbacks = [qa_relevance, qs_relevance, groundedness]
     tru_recorder = TruLlama(
         _query_engine,
-        app_id=_app_id,
+        app_id=app_id,
         feedbacks=feedbacks
         )
 
