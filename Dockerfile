@@ -16,6 +16,7 @@ COPY . .
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 EXPOSE $PORT
+EXPOSE 8501
 
 HEALTHCHECK CMD curl --fail http://localhost:$PORT/_stcore/health
 

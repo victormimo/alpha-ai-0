@@ -142,13 +142,14 @@ if st.session_state.messages[-1]["role"] != "assistant":
        
 
     with st.chat_message("assistant"):
-      
+        response_string = vector_response.response
+        
         # Display the full response in the chat
-        st.markdown(vector_response)
+        st.markdown(response_string)
 
         # Append the response to the session state messages
         st.session_state.messages.append(
-            {"role": "assistant", "content": vector_response}
+            {"role": "assistant", "content": response_string}
         )
 
 
