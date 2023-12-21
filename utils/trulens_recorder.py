@@ -7,6 +7,9 @@ from trulens_eval import (
 )
 from trulens_eval.feedback import Groundedness
 import numpy as np
+from dotenv import load_dotenv
+
+load_dotenv()
 
 truelens_openai = TruLensOpenAI()
 tru = Tru()

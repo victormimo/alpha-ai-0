@@ -2,4 +2,8 @@
 .history
 .vscode
 .streamlit
-
+__pycache__/
+utils/__pycache__/
+*.sqlite
+sentence_index
+merging_index
