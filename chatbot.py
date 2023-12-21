@@ -43,9 +43,11 @@ llm = LlamaOpenAI(model="gpt-4", temperature=0.1, system_prompt=system_prompt)
 @st.cache_data
 def load_data():
     print("loading documents")
-    documents = SimpleDirectoryReader(
-        input_files=["./eBook-How-to-Build-a-Career-in-AI.pdf"]
-    ).load_data()
+    # documents = SimpleDirectoryReader(
+    #     input_files=["./eBook-How-to-Build-a-Career-in-AI.pdf"]
+    # ).load_data()
+
+    documents = SimpleDirectoryReader(input_dir="./data/essays/", required_exts=[".txt"], recursive=True).load_data()
 
     document = Document(text="\n\n".join([doc.text for doc in documents]))
     return document, documents
