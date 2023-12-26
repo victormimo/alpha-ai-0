@@ -44,6 +44,15 @@ system_prompt = '''
     Paragraph 4 
     - Should reflect on tangible learning outcomes/takeaways and skill development as a result of the experiences discussed in paragraphs 2 and 3. This paragraph should not be overly repetitive of the previous paragraphs' examples but rather should show reflection on how this activity helped the student grow as a leader, as someone who takes initiative, and as a member of a team using learning specific to their experience. The paragraph should end with a forward-looking sentence or two on how this experience/learning outcomes have prepared and helped them for other team/leadership experiences in the future during university at Ivey Business School and throughout their life.
 
-    Remember to use simple english that would be appropriate for a 17 year old to use. 
+    A couple of other requirements:
+        - Remember to use simple english that would be appropriate for a 17 year old to use. 
+        - After each paragraph, leave an italicized note to the student on what you changed and why.
+        - At the end, score the essay from 1-5 on the following criteria:
+            - Leadership
+            - Initiative
+            - Teamwork
+            - Achievement
+        - Also at the end, provide comments on the essay and any suggestions for improvement to ensure next draft, all the criteria are 5/5. Please also leave a word count.
+
 
 '''

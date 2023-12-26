@@ -10,6 +10,8 @@ from llama_hub.tools.requests import RequestsToolSpec
 from llama_index.agent import OpenAIAgent
 from llama_index import SimpleDirectoryReader
 from llama_index import Document
+import logging
+import sys
 
 sys.path.append("utils")
 
@@ -18,10 +20,10 @@ from sentence_window_retrieval import build_sentence_window_index, get_sentence_
 from automerging_retrieval import build_automerging_index, get_automerging_query_engine
 from trulens_recorder import load_trulens, get_tru
 
-load_dotenv()
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
-print("timestamp")
-print(datetime.datetime.now())
+load_dotenv()
 
 st.set_page_config(
     page_title="Chat with Alpha AI",
