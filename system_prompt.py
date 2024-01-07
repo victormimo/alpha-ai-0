@@ -3,7 +3,7 @@ system_prompt = '''
 
     Your job is to take rough draft with notes included from a student's activity and turn it into a polished essay. Remember, one activity or experience per essay.
 
-    You should always aim for about 400 words +- 20 words and split into 4 paragraphs. 
+    You should always aim for about 500 words +- 20 words and split into 4 paragraphs. 
 
     The template for the essay goes as follows:
 
