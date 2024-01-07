@@ -6,7 +6,7 @@ import streamlit as st
 from llama_index.llms import OpenAI as LlamaOpenAI
 import openai 
 from system_prompt import system_prompt
-from llama_hub.tools.requests import RequestsToolSpec
+from llama_index.tools import QueryEngineTool, ToolMetadata
 from llama_index.agent import OpenAIAgent
 from llama_index import SimpleDirectoryReader
 from llama_index import Document
@@ -45,9 +45,6 @@ llm = LlamaOpenAI(model="gpt-4", temperature=0.1, system_prompt=system_prompt)
 @st.cache_data
 def load_data():
     print("loading documents")
-    # documents = SimpleDirectoryReader(
-    #     input_files=["./eBook-How-to-Build-a-Career-in-AI.pdf"]
-    # ).load_data()
 
     documents = SimpleDirectoryReader(input_dir="./data/essays/", required_exts=[".txt"], recursive=True).load_data()
 
@@ -85,30 +82,29 @@ def load_automerging_retrieval():
 
 
 # Pick which retrieval method to use
-query_engine, app_id = load_automerging_retrieval() #load_sentence_retrieval() 
+query_engine, app_id = load_automerging_retrieval() 
 
 # Load the trulens recorder and object for dashboard
 tru_recorder = load_trulens(query_engine, app_id)
 tru = get_tru()
 
-domain_headers = {
-    "api.openai.com": {
-        "Authorization": f"Bearer {openai_key}",
-        "Content-Type": "application/json",
-    },
-    "127.0.0.1": {
-        "Content-Type": "application/json",
-    },
-}
-
-tool_spec = RequestsToolSpec(domain_headers=domain_headers)
+# Load the tools
+query_tools = [
+    QueryEngineTool(
+        query_engine=query_engine,
+        metadata = ToolMetadata(
+            name="alpha_automerging_qe",
+            description="University entrance essay assistant to take rough draft with notes included from a student's activity and turn it into a polished essay",
+        )
+    )
+]
 
 agent = OpenAIAgent.from_tools(
     llm=llm,
-    tools=tool_spec.to_tool_list(),
+    tools=query_tools,
+    verbose=True,
     system_prompt=system_prompt,
 )
-
 
 # CHAT 
 
@@ -142,7 +138,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
     with st.spinner("The AI is thinking..."):
          with tru_recorder as recording:
             # Use query_engine to process the prompt
-            vector_response = query_engine.query(prompt)
+            vector_response = agent.chat(prompt)
        
 
     with st.chat_message("assistant"):
