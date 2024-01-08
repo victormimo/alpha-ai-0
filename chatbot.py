@@ -127,6 +127,7 @@ if "chat_engine" not in st.session_state.keys():  # Initialize the chat engine
 if prompt := st.chat_input(" "):
     st.session_state.messages.append({"role": "user", "content": prompt})
 
+
 for message in st.session_state.messages:  # Display the prior chat messages
     with st.chat_message(message["role"]):
         st.write(message["content"])
@@ -138,7 +139,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
     with st.spinner("The AI is thinking..."):
          with tru_recorder as recording:
             # Use query_engine to process the prompt
-            vector_response = agent.chat(prompt)
+            vector_response = st.session_state.chat_engine.chat(prompt)
        
 
     with st.chat_message("assistant"):
