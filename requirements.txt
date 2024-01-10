@@ -5,6 +5,5 @@ openai
 pypdf
 transformers
 torch
-trulens_eval==0.19.2
 IPython
 sentence-transformers

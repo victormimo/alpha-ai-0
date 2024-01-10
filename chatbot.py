@@ -18,7 +18,6 @@ sys.path.append("utils")
 # importing utils
 from sentence_window_retrieval import build_sentence_window_index, get_sentence_window_query_engine
 from automerging_retrieval import build_automerging_index, get_automerging_query_engine
-from trulens_recorder import load_trulens, get_tru
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
@@ -41,6 +40,9 @@ if not openai_key:
 openai.api_key = openai_key
 
 llm = LlamaOpenAI(model="gpt-4", temperature=0.1, system_prompt=system_prompt)
+
+print("model llm by open ai")
+print(llm)
 
 @st.cache_data
 def load_data():
@@ -84,10 +86,6 @@ def load_automerging_retrieval():
 # Pick which retrieval method to use
 query_engine, app_id = load_automerging_retrieval() 
 
-# Load the trulens recorder and object for dashboard
-tru_recorder = load_trulens(query_engine, app_id)
-tru = get_tru()
-
 # Load the tools
 query_tools = [
     QueryEngineTool(
@@ -118,10 +116,6 @@ if "messages" not in st.session_state.keys():  # Initialize the chat messages hi
         },
     ]
 
-if st.button("Launch Dashboard"):
-    tru.run_dashboard()
-
-
 if "chat_engine" not in st.session_state.keys():  # Initialize the chat engine
     st.session_state.chat_engine: OpenAIAgent = agent
 if prompt := st.chat_input(" "):
@@ -137,9 +131,8 @@ for message in st.session_state.messages:  # Display the prior chat messages
 # If last message is not from assistant, generate a new response
 if st.session_state.messages[-1]["role"] != "assistant":
     with st.spinner("The AI is thinking..."):
-         with tru_recorder as recording:
-            # Use query_engine to process the prompt
-            vector_response = st.session_state.chat_engine.chat(prompt)
+        # Use query_engine to process the prompt
+        vector_response = st.session_state.chat_engine.chat(prompt)
        
 
     with st.chat_message("assistant"):
