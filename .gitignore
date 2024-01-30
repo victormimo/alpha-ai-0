@@ -5,5 +5,4 @@
 __pycache__/
 utils/__pycache__/
 *.sqlite
-sentence_index
-merging_index
+index/
