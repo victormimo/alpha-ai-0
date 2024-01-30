@@ -59,7 +59,7 @@ def load_automerging_retrieval_ivey():
         documents_ivey,
         llm,
         embed_model="local:BAAI/bge-small-en-v1.5",
-        save_dir="merging_index"
+        save_dir="./index/ivey/merging_index"
     )
     automerging_engine = get_automerging_query_engine(automerging_index)
     return automerging_engine
@@ -71,7 +71,7 @@ def load_automerging_retrieval_queens():
         documents_queens,
         llm,
         embed_model="local:BAAI/bge-small-en-v1.5",
-        save_dir="merging_index"
+        save_dir="./index/queens/merging_index"
     )
     automerging_engine = get_automerging_query_engine(automerging_index)
     return automerging_engine
