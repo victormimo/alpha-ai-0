@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "alpha-ai-0"
+version = "0.1.0"
+description = ""
+authors = ["Victor Mimo <victormimoc@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+llama-index = "^0.9.39"
+streamlit = "^1.30.0"
+openai = "^1.10.0"
+transformers = "^4.37.2"
+torch = "^2.1.2"
+ipython = "^8.20.0"
+sentence-transformers = "^2.3.0"
+python-dotenv = "^1.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
