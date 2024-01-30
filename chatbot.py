@@ -39,60 +39,62 @@ if not openai_key:
 
 openai.api_key = openai_key
 
-llm = LlamaOpenAI(model="gpt-4", temperature=0.1, system_prompt=system_prompt)
-
-print("model llm by open ai")
-print(llm)
+llm = LlamaOpenAI(model="gpt-4-0125-preview", temperature=0.1, system_prompt=system_prompt)
 
 @st.cache_data
 def load_data():
     print("loading documents")
 
-    documents = SimpleDirectoryReader(input_dir="./data/essays/", required_exts=[".txt"], recursive=True).load_data()
+    documents_ivey = SimpleDirectoryReader(input_dir="./data/ivey/", required_exts=[".txt"], recursive=True).load_data()
+    documents_queens = SimpleDirectoryReader(input_dir="./data/queens/", required_exts=[".txt"], recursive=True).load_data()
 
-    document = Document(text="\n\n".join([doc.text for doc in documents]))
-    return document, documents
+    return documents_ivey, documents_queens
 
-document, documents = load_data()
-
-# import advanced RAG techniques
-@st.cache_resource
-def load_sentence_retrieval():
-    print("loading sentence retrieval")
-    sentence_index = build_sentence_window_index(
-        document,
-        llm,
-        embed_model="local:BAAI/bge-small-en-v1.5",
-        save_dir="sentence_index"
-    )
-    sentence_window_engine = get_sentence_window_query_engine(sentence_index)
-    app_id = "Sentence Retrieval"
-    return sentence_window_engine, app_id
+documents_ivey, documents_queens  = load_data()
 
 @st.cache_resource
-def load_automerging_retrieval():
-    print("loading automerging retrieval")
+def load_automerging_retrieval_ivey():
+    print("loading automerging retrieval ivey")
     automerging_index = build_automerging_index(
-        documents,
+        documents_ivey,
         llm,
         embed_model="local:BAAI/bge-small-en-v1.5",
         save_dir="merging_index"
     )
     automerging_engine = get_automerging_query_engine(automerging_index)
-    app_id = "Automerging Retrieval" 
-    return automerging_engine, app_id
+    return automerging_engine
+
+@st.cache_resource
+def load_automerging_retrieval_queens():
+    print("loading automerging retrieval queens")
+    automerging_index = build_automerging_index(
+        documents_queens,
+        llm,
+        embed_model="local:BAAI/bge-small-en-v1.5",
+        save_dir="merging_index"
+    )
+    automerging_engine = get_automerging_query_engine(automerging_index)
+    return automerging_engine
 
 
-# Pick which retrieval method to use
-query_engine, app_id = load_automerging_retrieval() 
+query_engine_ivey = load_automerging_retrieval_ivey() 
+query_engine_queens = load_automerging_retrieval_queens()
+
 
 # Load the tools
 query_tools = [
     QueryEngineTool(
-        query_engine=query_engine,
+        query_engine=query_engine_ivey,
         metadata = ToolMetadata(
-            name="alpha_automerging_qe",
-            description="University entrance essay assistant to take rough draft with notes included from a student's activity and turn it into a polished essay",
+            name="ivey_automerging_qe",
+            description="Ivey Query Engine",
+        )
+    ),
+    QueryEngineTool(
+        query_engine=query_engine_queens,
+        metadata = ToolMetadata(
+            name="queens_automerging_qe",
+            description="Queens Query Engine",
         )
     )
 ]
