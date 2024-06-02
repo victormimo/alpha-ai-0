@@ -2,3 +2,8 @@ llama-hub
 llama-index
 streamlit
 openai
+pypdf
+transformers
+torch
+IPython
+sentence-transformers
